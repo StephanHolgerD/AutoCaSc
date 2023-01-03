@@ -1,9 +1,18 @@
+from text.header_footer import footer as footertxt
+from text.about import about as abouttxt
+from text.faq import faq as faqtxt
+from text.impressum import impressum as impressumtxt
+from text.news import news as newstxt
+from text.instructions import instructions as instructionstxt
+
+
 import copy
 import io
 from statistics import mean
 from flask import Flask
 import dash
 from dash import dcc
+from dash.dcc import Download
 from dash import html
 from dash.dependencies import Input, Output, State, ALL
 import dash_bootstrap_components as dbc
@@ -16,7 +25,7 @@ import os, sys
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(CURRENT_DIR))
 from AutoCaSc_core.AutoCaSc import AutoCaSc, VERSION
-from dash_extensions import Download
+#from dash_extensions import Download
 from refseq_transcripts_converter import convert_variant
 
 server = Flask(__name__)
@@ -26,7 +35,7 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],
 app.title = "webAutoCaSc"
 
 
-
+footer = footertxt.footer
 navbar = dbc.Navbar(
             dbc.Container(
                 [
@@ -68,52 +77,7 @@ navbar = dbc.Navbar(
         )
 
 
-footer = dbc.Navbar(
-    dbc.Container(
-        [
-            html.A(
-                html.Img(src=app.get_asset_url('by-nc-sa.eu.svg'),
-                         height="30px"
-                         ),
-                href="https://creativecommons.org/licenses/by-nc-sa/4.0/",
-                target="_blank"),
-            dbc.NavbarToggler(id="footer-toggler"),
-            dbc.Collapse(
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            dbc.NavLink("Github",
-                                        href='https://github.com/JohannKaspar/AutoCaSc',
-                                        target="_blank",
-                                        style={"color": "#ffffff"}),
-                            align="center",
-                            width="auto"),
-                        dbc.Col(dbc.NavLink("Human Genetics Leipzig",
-                                            href='https://www.uniklinikum-leipzig.de/einrichtungen/humangenetik',
-                                            target="_blank",
-                                            style={"color": "#ffffff"}),
-                                align="center",
-                                width="auto"),
-                        dbc.Col(dbc.NavLink("Our Paper",
-                                            href="https://onlinelibrary.wiley.com/doi/10.1002/humu.24451",
-                                            target="_blank",
-                                            style={"color": "#ffffff"}),
-                                align="center",
-                                width="auto"
-                                )
-                    ],
-                    className="ms-auto flex-nowrap mt-3 mt-md-0 g-0",
-                    align="center",
-                ),
-                id="footer-collapse",
-                navbar=True,
-            )
-        ]
-    ),
-    color="dark",
-    dark=True,
-    fixed="bottom"
-)
+
 
 stores = ["query_memory",
           "variant_queue_input",
@@ -251,632 +215,23 @@ error_page = dbc.Container([
     ),
 ])
 
-citations = html.Div([
-    html.Hr(),
-    dbc.Container([
-        html.P([
-            "1. ",
-            html.A(html.B("VEP"), href="https://grch37.ensembl.org/info/docs/tools/vep/index.html", target="_blank"),
-            ": McLaren, W. et al. The Ensembl Variant Effect Predictor. Genome Biol 17, 122 (2016)."
-        ]),
-        html.P([
-            "2. ", html.A(html.B("gnomAD"), href="https://gnomad.broadinstitute.org", target="_blank"),
-            ": Karczewski, K. J. et al. The mutational constraint spectrum quantified from variation in 141,"
-            "456 humans. Nature 581, 434–443 (2020)."
-        ]),
-        html.P([
-            "3. ", html.A(html.B("GTEx"), href="http://www.gtexportal.org/home/index.html", target="_blank"),
-            ": Consortium, T. Gte. The GTEx Consortium atlas of genetic regulatory effects across human tissues. "
-            "Science 369, 1318–1330 (2020). "
-        ]),
-        html.P([
-            "4. ", html.A(html.B("STRING"), href="https://string-db.org", target="_blank"),
-            ": Szklarczyk, D. et al. STRING v11: protein-protein association networks with increased coverage, "
-            "supporting functional discovery in genome-wide experimental datasets. Nucleic Acids Res 47, D607–D613 ("
-            "2019). "
-        ]),
-        html.P([
-            "5. ", html.A(html.B("MGI"), href="http://www.informatics.jax.org", target="_blank"),
-            ": Bult, C. J. et al. Mouse Genome Database (MGD) 2019. Nucleic Acids Res 47, D801–D806 (2019)."
-        ]),
-        html.P([
-            "6. ", html.A(html.B("PubTator"), href="https://www.ncbi.nlm.nih.gov/research/pubtator/", target="_blank"),
-            ": Wei, C.-H., Allot, A., Leaman, R. & Lu, Z. PubTator central: automated concept annotation for "
-            "biomedical full text articles. Nucleic Acids Res 47, W587–W593 (2019). "
-        ]),
-        html.P([
-            "7. ", html.A(html.B("PsyMuKB"), href="http://www.psymukb.net", target="_blank"),
-            ": Lin, G. N. et al. PsyMuKB: An Integrative De Novo Variant Knowledge Base for Developmental Disorders. "
-            "Genomics Proteomics Bioinformatics 17, 453–464 (2019). "
-        ]),
-        html.P([
-            "8. ", html.A(html.B("DisGeNET"), href="https://www.disgenet.org", target="_blank"),
-            ": Piñero, J. et al. DisGeNET: a comprehensive platform integrating information on human "
-            "disease-associated genes and variants. Nucleic Acids Res 45, D833–D839 (2017). "
-        ])
-    ]),
-    html.Hr()
-])
+about_eng = abouttxt.about_eng
+about_ger = abouttxt.about_ger
+about_page = abouttxt.about_page
+browser_compatibility_header = faqtxt.browser_compatibility_header
+browser_compatibility_row1 = faqtxt.browser_compatibility_row1
+browser_compatibility_row2 = faqtxt.browser_compatibility_row2
+browser_compatibility_row3 = faqtxt.browser_compatibility_row3
+browser_compatibility_body = faqtxt.browser_compatibility_body
+faq_ger = faqtxt.faq_ger 
+faq_eng = faqtxt.faq_eng
+tutorial_page = instructionstxt.tutorial_page
+faq_page = faqtxt.faq_page
+news_page = newstxt.news_page
+impressum_ger = impressumtxt.impressum_ger
+impressum_eng = impressumtxt.impressum_eng
+impressum_page = impressumtxt.impressum_page
 
-about_eng = [html.P(
-    "AutoCaSc is a tool for quantifying the plausibility of candidate variants for Neurodevelopmental Disorders ("
-    "NDD). AutoCaSc is intended to be used on impactful rare variants in a research setting. In its current version, "
-    "12 parameters are counted in, achieving a maximum of 15 points. User inputs are the identified variant in a "
-    "standard HGVS/VCF format together with segregation aspects (de novo, recessive, dominant and X-chromosomal). We "
-    "use the Ensembl VEP REST API (1) to annotate variant attributes (e.g. variant consequence, allele frequency from "
-    "gnomAD, in silico predictions) and gene based scores dependent on inheritance mode (e.g. high Z-score is of "
-    "relevant for de novo missense) from dbNSFP. Other attributes were previously labor intensive and predisposed to "
-    "variability. These included important categories like expression in the nervous system, neuronal functions, "
-    "co-expression and protein interactions, search for relevant literature, model organisms and observations in "
-    "screening studies. As an objective approach we now searched a defined set of databases (gnomAD (2), GTEx (3), "
-    "STRING (4), MGI (5), PubTator (6), PsyMuKB (7), DisGeNET (8)) and generated empirical cut-offs for each category "
-    "by comparing the respective readout between a manually curated list of known NDD genes from the SysID database ("
-    "9) and a list of genes not involved in NDD.",
-    style={"textAlign": "justify"}),
-             html.Br(),
-             html.P(
-                 "Feel free to contact johann.lieberwirth@medizin.uni-leipzig.de or "
-                 "rami.aboujamra@medizin.uni-leipzig.de in case you have further questions or in case you have found "
-                 "a bug.",
-                 style={"textAlign": "justify"})]
-
-about_ger = [html.P(
-    "AutoCaSc ist ein Skript zum automatisierten Bewerten von Kandidatenvarianten in Fällen neuronaler "
-    "Entwicklungsverzögerung. Es ist ausschließlich für Forschungszwecke zu benutzen. Die Annotation der Varianten "
-    "erfolgt mit der REST API von VEP (ensembl, (1)). Zur Berechnung der Kandidatenpunktzahl (Candidate score, "
-    "CaSc) werden 12 verschiedene Parameter einbezogen. Dies sind die Art der Vererbung (z.B. de novo), Genattribute "
-    "wie pLI & Z-Score (gnomAD (2)), Expressionsmuster (GTEx (3)), in silico Analysen, Proteininteratkionsdatnebanken "
-    "(StringDB (4)), Tierdatenbanken (MGI (5)), Literaturdatenbanken (Pubtator Central (6)),  sowie weitere (PsymuKB "
-    "(7), DisGeNET (8)). Die maximal erreichbare Punktzahl sind 15 Punkte. Je höher der erreichte Punktwert, "
-    "desto plausibler scheint die aus den zugrundeliegenden Daten errechnete Pathogenität der Variante mit Blick auf "
-    "neuronale Entwicklungsverzögerung.",
-    style={"textAlign": "justify"}),
-             html.Br(),
-             html.P(
-                 "Bei Fragen und Anmerkungen kontaktieren Sie bitte johann.lieberwirth@medizin.uni-leipzig.de oder "
-                 "rami.aboujamra@medizin.uni-leipzig.de.",
-                 style={"textAlign": "justify"})]
-
-about_page = dbc.Container([
-    html.Br(),
-    dbc.Row([
-        dbc.Col(html.H2("About"),
-                width="auto"),
-        dbc.Col(dbc.Button("DE",
-                           id="about_language_button",
-                           color="secondary"),
-                width="auto")
-    ]),
-    html.Br(),
-    html.Div(about_eng,
-             id="about_text"),
-    html.Br(),
-    citations
-])
-
-
-browser_compatibility_header = [
-    html.Thead(html.Tr([html.Th("OS"),
-                        html.Th("Version"),
-                        html.Th("Chrome"),
-                        html.Th("Firefox"),
-                        html.Th("Microsoft Edge"),
-                        html.Th("Safari")]))
-]
-browser_compatibility_row1 = html.Tr([html.Td("MacOS"),
-                html.Td("12.0.1"),
-                html.Td("96.0.4664.110"),
-                html.Td("94.0.2"),
-                html.Td("n/a"),
-                html.Td("15.1")])
-browser_compatibility_row2 = html.Tr([html.Td("Linux"),
-                html.Td("20.04.3 LTS"),
-                html.Td("93.0.4577.82"),
-                html.Td("n/a"),
-                html.Td("n/a"),
-                html.Td("n/a")])
-browser_compatibility_row3 = html.Tr([html.Td("Windows 10"),
-                html.Td("1809"),
-                html.Td("94.0.4606.71"),
-                html.Td("92.0.1"),
-                html.Td("96.0.1504.53"),
-                html.Td("n/a")])
-
-browser_compatibility_body = [html.Tbody([browser_compatibility_row1,
-                                          browser_compatibility_row2,
-                                          browser_compatibility_row3])]
-
-
-faq_ger = html.Div(
-    [
-        dcc.Markdown("""
-            __Was ist AutoCaSc?__  
-            AutoCaSc ist ein Werkzeug zur systematischen Evaluierung der Plausibilität von Varianten in Genen, welche 
-            bislang nicht mit Erkrankungen in Verbindung gebracht wurden ("Kandidatengene"), in Fällen neurologischer 
-            Entwicklungsverzögerung (neurodevelopmental disorder, NDD). Solche Varianten werden üblicherweise durch 
-            genomweites Screeningmethoden bei Individuen mit NDD, aber ohne eindeutige diagnostische Variante 
-            identifiziert. AutoCaSc berücksichtigt variantenspezifische Parameter (Konservierung, 
-            "in silico"-Vorhersagen), genspezifische Parameter ("gene constraint", Expressionsmuster, 
-            Proteininteraktionen), die Segregation der Variante und das Gesamtzusammenspiel zwischen diesen Parametern.
-
-            __Wofür stehen die 4 Unterscores?__  
-            - __Variant Attributes (6 Punkte max):__ Dazu gehören Konservierung (GERP++), "in silico"-Vorhersagen 
-            (MutationAssessor, MutationTaster, Sift), Spleißstellenvorhersagen (MaxEntScan, AdaBoost, RandomForest) 
-            und erwartete Auswirkungen (VEP).
-            - __Gene Constraints (1 Punkte max):__ Es handelt sich dabei um gene-constraint Parameter aus gnomAD; LOUEF 
-            für Loss-of-Function-Varianten, Z für Missense-Varianten.
-            - __Inheritance (2 Punkte max):__ Diese Punkte hängen von der Vererbung und der Segregation der Variante in 
-            der Familie ab.
-            - __Gene Plausibility (6 Punkte max):__ Diese Punkte werden auf der Grundlage des Expressionsmusters des 
-            Gens, der Protein-Protein-Interaktionen, der Phänotypen in Tiermodellen, der in PubMed veröffentlichten 
-            Artikel zum Gen, de novo-Varianten im Gen die mit NDD in Verbindung gebacht wurden, und anderer Quellen 
-            berechnet.
-            
-            __Wie annotiert AutoCaSc?__  
-            AutoCaSc verwendet VEP hg19 Endpunkte. Zurzeit ist hg38 nicht unterstützt. Verschiedene Tools wie 
-            VariantValidator (https://variantvalidator.org/) stehen zur Verfügung, um hg38 Variant zu hg19 zu 
-            übersetzen. Alle wichtigen genomischen Eingabeformate wie die Notation im VCF-Format und die HGVS 
-            g.-Notation werden unterstützt. Bei Verwendung anderer Transkript-Systemen (außer ensembl), wie z.B. 
-            RefSeq kann es zu vereinzelten Inkompatibilitäten mit entsprechender Fehlermedlung kommen.
-
-            __Wie kann AutoCaSc zitiert werden?__  
-            J. Lieberwirth, B. Büttner, C. Klöckner, K. Platzer, B. Popp, R. Abou Jamra. (2022). [AutoCaSc: Prioritizing candidate genes for neurodevelopmental disorders](https://onlinelibrary.wiley.com/doi/10.1002/humu.24451)  
-            
-            __Wie kann man mehrere (compound heterozygote) Variaten eingeben?__  
-            Mehrere Varianten können eingegeben werden, indem sie durch ein Komma getrennt werden. Wenn "compound 
-            heterozygous" ausgewählt ist, findet webAutoCaSc automatisch Varianten im gleichen Gen und verarbeitet diese
-             als entsprechende compound heterozygote Varianten.
-
-            __Wofür stehen die Vererbungsoptionen?__  
-            - __De novo:__ De novo-Varianten werden nur im Index identifiziert und sind nicht von den Eltern vererbt 
-            worden.
-            - __Inherited dominant:__ Im Falle einer vererbten dominanten Variante wurde die Variante von einem 
-            ebenfalls betroffenen Elternteil vererbt.
-            - __Homozygous recessive:__ Die Variante wird homozygot im Index und in heterozygot in beiden gesunden 
-            Elternteilen identifiziert.
-            - __X-linked:__ X-chromosomale Varianten werden von der heterozygoten Trägermutter vererbt und verursachen 
-            bei einem männlichen Nachkommen einen Phänotyp, da er nur ein betroffenes Allel und kein gesundes zweites 
-            Allel zum Ausgleich hat. De-novo-Varianten auf dem X-Chromosom, sowohl bei weiblichen als auch bei 
-            männlichen Index-Individuen, werden in der Option De-novo-Vererbung berücksichtigt.
-            - __Compound heterozygous:__ Compound heterozygote Varianten sind zwei verschiedene Varianten im selben Gen,
-             aber auf verschiedenen Allelen. Jede wird von nur einem heterozygoten Trägerelternteil vererbt.
-            - __Unknown:__ Die Option "unbekannt" kann verwendet werden, wenn Informationen zu den Eltern und damit zur 
-            Segregation fehlen.
-            
-            __Ab wann ist ein Score hoch?__
-            Die maximale Punktzahl sind 15. Um ein besseres Gefühl zu geben, ob ein candidate score hoch ist, wurde ein 
-            Tooltip implementiert, welcher angezeigt wird wenn der Mauszeiger über dem Ergebnis schwebt. Der Tooltip 
-            zeigt an, wie viel Prozent der Kandidaten, welche am Institut für Humangenetik in Leipzig evaluiert wurden, 
-            ein gleich hohes oder niedrigeres Ergebnis erreichten.
-
-            __Wofür steht _webAutoCaSc_?__  
-            _AutoCaSc_ steht für __Auto__mated __Ca__ndidate __Sc__ore. Wir benutzen den __web__ Präfix, um das command 
-            line interface (CLI) von der Webapp zu unterscheiden, welche auf dem AutoCaSc script basiert. Das 
-            __Ca__ndidate __Sc__ore Prinzip wurde bereits von _Büttner et al. bioRxiv. 2019_ beschrieben. 
-
-            __Kann webAutoCaSc für andere Phänotypen genutzt werden?__  
-            AutoCaSc wurde für die Arbeit mit NDDs entwickelt. Wir empfehlen nicht, es für andere Phänotypen zu 
-            verwenden. Für zukünftige Updates planen wir ein verallgemeinertes, phänotyp-unabhängiges Framework.
-            
-            __Auf welchen Browsern läuft webAutoCaSc?__
-            Wir haben webAutoCaSc auf folgenden Betriebssystemen und Browsern getestet:
-            """),
-        dbc.Table(browser_compatibility_header + browser_compatibility_body, bordered=True)
-    ]
-)
-
-faq_eng = html.Div(
-    [
-        dcc.Markdown("""
-            __What is AutoCaSc?__  
-            The AutoCaSc tool systematically evaluates the plausibility of variants in genes not yet associated with 
-            human disease ("candidate genes") to be associated with neurodevelopmental disorders (NDDs). Such variants 
-            are typically identified through genome wide screening approaches in individuals NDDs but without a clear 
-            diagnostic variant. AutoCaSc accounts for variant-specific parameters (conservation, "in silico" 
-            predictions), gene specific parameters (gene constraint, expression pattern, protein interactions), 
-            segregation of the variant and the overall interplay between these parameters.
-            
-            __What do the 4 subscores stand for?__  
-            - __Variant Attributes (6 points max):__ These include conservation (GERP++), "in silico" predictions 
-            (MutationAssessor, MutationTaster, Sift), splice site predictions (MaxEntScan, AdaBoost, RandomForest) and 
-            expected impact (VEP).
-            - __Gene Constraints (1 point max):__ These are gene constraint parameters from gnomAD; LOUEF for loss of 
-            function variants, Z for missense variants.
-            - __Inheritance (2 points max):__ These points depend on inheritance of the variant of interest and 
-            segregation of the variant in the family.
-            - __Gene Plausibility (6 points max):__ These points are calculated based on the gene's expression pattern, 
-            protein-protein interactions, animal model phenotypes, published articles on PubMed, de novo variants in the
-             gene linked to NDD and other sources.
-            
-            __How does AutoCaSc annotate?__  
-            AutoCaSc uses the VEP API for hg19, as currently this seems to be the most commonly used reference genome. 
-            By now, hg38 is not supported. You can use tools like VariantValidator (https://variantvalidator.org/) to 
-            translate your hg38 variants to hg19. All major genomic input formats like VCF format style notation and 
-            HGVS g.-style notation are supported for hg19. In some cases incompatibility can occur when using 
-            RefSeq transcripts, which is then displayed as an error. We recommend using the VCF format.
-            
-            __How can AutoCaSc be cited?__  
-            If you like to cite AutoCaSc, please refer to our paper:  
-            J. Lieberwirth, B. Büttner, C. Klöckner, K. Platzer, B. Popp, R. Abou Jamra. (2022). [AutoCaSc: Prioritizing candidate genes for neurodevelopmental disorders](https://onlinelibrary.wiley.com/doi/10.1002/humu.24451)  
-            
-            __How can I enter multiple (compound heterogyous) variants?__  
-            Just enter all your variants of interest by separating them by a comma. If "compound heterozygous" is 
-            selected, webAutoCaSc will automatically match variants in the same gene and process them as corresponding 
-            compound heterozygous variants.
-
-            __What do the inheritance options stand for?__  
-            - __De novo:__ De novo variants are identified only in the index and have not been inherited from the 
-            parents.
-            - __Inherited dominant:__ In case of an inherited dominant variant, the variant of interested has been 
-            inherited by an equally affected parent.
-            - __Homozygous recessive:__ Variant is identified in homozygous state in the index and in heterozygous 
-            state in both healthy parents.
-            - __X-linked:__ X-linked variants are being inherited from the heterozygous carrier mother and cause a 
-            phenotype in a male descendant as he has only one affected allele and no healthy second allele to 
-            compensate. De novo variants on the X-chromosome, for both female and male index individuals, are account 
-            for in the de novo inheritance option.
-            - __Compound heterozygous:__ Compound heterozygous variants are two different variants in the same gene but 
-            on different alleles. Each is inherited from only one heterozygous carrier parent.
-            - __Unknown:__ The "unknown" option can be used if information on the parents and thus on segregation is 
-            missing.
-            
-            __When is a score high?__  
-            The maximum score is 15. To give a better feeling if a candidate score is high, a tooltip has been 
-            implemented, which is displayed when the mouse pointer hovers over the result. The tooltip shows what 
-            percentage of candidates evaluated at the Institute of Human Genetics in Leipzig achieved an equal or lower 
-            score.
-            
-            __What does _webAutoCaSc_ stand for?__  
-            _AutoCaSc_ stands for __Auto__mated __Ca__ndidate __Sc__ore. We use the __web__ prefix to distinguish the 
-            command line interface (CLI) from the webapplication running the AutoCaSc script. The __Ca__ndidate 
-            __Sc__ore principle has been previously described (Büttner et al. bioRxiv. 2019). 
-            
-            __Can webAutoCaSc be used for other phenotypes as well?__  
-            AutoCaSc has been developed to work for NDDs. We don't recommend using it for other phenotypes. We are 
-            planning a generalized phenotype agnostic framework for future updates.
-            
-            __What browsers can run webAutoCaSc?__
-            We tested webAutoCaSc on different operating systems and browsers. You can find a table below.
-            """),
-        dbc.Table(browser_compatibility_header + browser_compatibility_body, bordered=True)
-        ]
-)
-
-image_column_width = 8
-text_column_width = 12 - image_column_width
-
-tutorial_page = html.Div(
-    [
-        html.Br(),
-        html.H2("Instructions"),
-        html.Br(),
-        dbc.Container(
-            [
-                dbc.Row(
-                    [
-                        dbc.Col(html.Img(src=app.get_asset_url('faq_images/input.png'),
-                                         style={"maxWidth": "100%"}),
-                                width=image_column_width),
-                        dbc.Col(html.P("""Enter the variant (hg19!) to be analyzed in the input field. The formatting of the variant is checked and if it is ok a green frame appears. In case there is a problem, the frame is red and scoring cannot be started. Then select one of the available heritages for the entered variants and click on "Start search". For a more detailed explanation of the choices, please see above ("What do the inheritance options stand for?")."""),
-                                width=text_column_width)
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/results.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """Scoring may take a moment, then the results overview will open. At the top left you will see the variant you entered. Two flags may appear here: if the gene is associated with a phenotype in OMIM and if the gene is listed as a candidate gene or known NDD gene in SysID. On the upper right side you will find the result highlighted in color. The bluer, the lower, the redder, the higher the result.
-                                   Below this you will find general information: which gene is affected, what are the HGVS and VCF notations and which transcript was used for the evaluation. In the lower part there are two tables. The left table contains the scores achieved by the candidate variant in the four categories. For more detailed scoring information, please see "What do the 4 subscores stand for?" above. The right table contains detailed information about the corresponding variant: the VEP-predicted impact on protein function, the phred-scaled CADD score, gnomAD gene constraint metrics o/e LoF and o/e missense, GERP++ rank score and allele count in gnomAD."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/percentile.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """Hovering over the result will display what percentage of candidates evaluated at the Institute of Human Genetics in Leipzig achieved a lower score."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/subscores.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """If you hover over the result of a subscore, a short explanation of how the score is composed is displayed."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/transcripts.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """For many variants there are several transcripts for which the variant achieves an equally high CaSc. You can select all ENSEMBL transcripts with an equally high CaSc from the drop down menu to the right of "Transcript:"."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/all_notations.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """For an overview of even more (including RefSeq) transcripts, click on "Load all HGVSC notations (coding only)". After a short moment a list of all possible affected transcripts will be displayed."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/hgvsc_input.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """It is also possible to enter variants in HGVSC notation, but we strongly recommend to use VCF notation. Problems can occur especially when RefSeq transcripts are used. Since the annotation is done with VEP (Ensembl), it may not be possible to identify a corresponding Ensembl transcript."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/multiple_variants_input.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """It is also possible to enter multiple variants, these should be separated with a comma."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/multiple_variants_overview.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """The results are then presented in a tabular overview."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/multiple_variants_detailed.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """A click on one of the tabs labeled with the variants will lead you to the corresponding results of a variant."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                ),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            html.Img(
-                                src=app.get_asset_url('faq_images/downloaded.png'),
-                                style={"maxWidth":"100%"}
-                            ),
-                            width=image_column_width),
-                        dbc.Col(
-                            html.P(
-                                """Clicking on "Download" will download the results in tab-separated form."""
-                            ),
-                            width=text_column_width
-                        )
-                    ],
-                    align="center"
-                )
-            ]
-        )
-    ]
-)
-
-
-
-faq_page = dbc.Container([
-    html.Br(),
-    dbc.Row([
-        dbc.Col(html.H2("FAQ"),
-                width="auto"),
-        dbc.Col(dbc.Button("DE",
-                           id="faq_language_button",
-                           color="secondary"),
-                width="auto")
-    ]),
-    html.Br(),
-    html.Div(faq_eng,
-             id="faq_text",
-             style={"textAlign": "justify"})
-])
-
-news_page = dbc.Container(
-    [
-        html.Br(),
-        dbc.Row([
-            dbc.Col(html.H2("News"),
-                    width="auto")
-        ]),
-        html.Br(),
-        html.Div(
-            [
-                dcc.Markdown(
-                    """**29.08.2022**  
-                    Our paper has been published and can be found here: [AutoCaSc: Prioritizing candidate genes for neurodevelopmental disorders](https://onlinelibrary.wiley.com/doi/10.1002/humu.24451).
-                    """
-                ),
-                html.Hr(),
-                dcc.Markdown(
-                    """**20.06.2022**  
-                    Our manuscript is available as a preprint at [Authorea](https://www.authorea.com/users/479253/articles/567112-autocasc-prioritizing-candidate-genes-for-neurodevelopmental-disorders).
-                    """
-                )
-            ],
-            id="faq_text")
-    ],
-    style={"height": "calc(100vh - 150px)"}
-)
-
-impressum_ger = dcc.Markdown("""
-                            Gemäß § 28 BDSG widersprechen wir jeder kommerziellen Verwendung und Weitergabe der Daten.\n
-                            __Verantwortunsbereich__:  
-                            Das Impressum gilt nur für die Internetpräsenz unter der Adresse: 
-                            https://autocasc.uni-leipzig.de\n
-                            __Abgrenzung__:  
-                            Die Web-Präsenz ist Teil des WWW und dementsprechend mit fremden, sich jederzeit wandeln 
-                            könnenden Web-Sites verknüpft, die folglich auch nicht diesem Verantwortungsbereich 
-                            unterliegen und für die nachfolgende Informationen nicht gelten. Dass die Links weder gegen 
-                            Sitten noch Gesetze verstoßen, wurde genau ein Mal geprüft (bevor sie hier aufgenommen 
-                            wurden).\n
-                            __Diensteanbieter__:  
-                            Johann Lieberwirth und Rami Abou Jamra\n
-                            __Ansprechpartner für die Webseite__:\n
-                            Johann Lieberwirth (johann.lieberwirth@medizin.uni-leipzig.de)\n
-                            __Verantwortlicher__:  
-                            Rami Abou Jamra (rami.aboujamra@medizin.uni-leipzig.de)\n
-                            __Anschrift__:  
-                            Sekretariat  
-                            Philipp-Rosenthal-Str. 55  
-                            04103 Leipzig  
-                            Telefon: 0341 - 97 23800\n
-                            __Urheberschutz und Nutzung__:  
-                            Der Urheber räumt Ihnen ganz konkret das Nutzungsrecht ein, sich eine private Kopie für 
-                            persönliche Zwecke anzufertigen. Nicht berechtigt sind Sie dagegen, die Materialien zu 
-                            verändern und/oder weiter zu geben oder gar selbst zu veröffentlichen.
-                            Wenn nicht ausdrücklich anders vermerkt, liegen die Urheberrechte bei Johann Lieberwirth
-                            Datenschutz Personenbezogene Daten werden nur mit Ihrem Wissen und Ihrer Einwilligung 
-                            erhoben. Auf Antrag erhalten Sie unentgeltlich Auskunft zu den über Sie gespeicherten 
-                            personenbezogenen Daten. Wenden Sie sich dazu bitte an den Administrator.\n
-                            __Keine Haftung__:  
-                            Die Inhalte dieses Webprojektes wurden sorgfältig geprüft und nach bestem Wissen erstellt. 
-                            Aber für die hier dargebotenen Informationen wird kein Anspruch auf Vollständigkeit, 
-                            Aktualität, Qualität und Richtigkeit erhoben. Es kann keine Verantwortung für Schäden 
-                            übernommen werden, die durch das Vertrauen auf die Inhalte dieser Website oder deren 
-                            Gebrauch entstehen.\n
-                            __Schutzrechtsverletzung__:  
-                            Falls Sie vermuten, dass von dieser Website aus eines Ihrer Schutzrechte verletzt wird, 
-                            teilen Sie das bitte umgehend per elektronischer Post mit, damit zügig Abhilfe geschafft 
-                            werden kann. Bitte nehmen Sie zur Kenntnis: Die zeitaufwändigere Einschaltung eines 
-                            Anwaltes zur für den Diensteanbieter kostenpflichtigen Abmahnung entspricht nicht dessen 
-                            wirklichen oder mutmaßlichen Willen.\n
-                            \n
-                            lt. Urteil vom 12. Mai 1998 - 312 O 85/98 - "Haftung für Links" hat das Landgericht Hamburg 
-                            entschieden, dass man durch die Anbringung eines Links, die Inhalte der gelinkten Seite ggf.
-                             mit zu verantworten hat. Dies kann nur dadurch verhindert werden, dass man sich 
-                             ausdrücklich von diesen Inhalten distanziert.
-                            'Hiermit distanzieren wir uns ausdrücklich von allen Inhalten aller gelinkten Seiten auf 
-                            unserer Website und machen uns diese Inhalte nicht zu eigen. Diese Erklärung gilt für alle 
-                            auf unsere Website angebrachten Links.'
-                            \n
-                            © Copyright 2021
-                """)
-
-impressum_eng = [
-        dcc.Markdown("""
-            The Institute for Human Genetics (University Medical Center Leipzig) makes no representation about the 
-            suitability or accuracy of this software or data for any purpose, and makes no warranties, including fitness 
-            for a particular purpose or that the use of this software will not infringe any third party patents, 
-            copyrights, trademarks or other rights.\n
-            __Responsible for this website__:  
-            Johann Lieberwirth (johann.lieberwirth@medizin.uni-leipzig.de)\n
-            __Responsible for this project__:  
-            Rami Abou Jamra (rami.aboujamra@medizin.uni-leipzig.de)\n
-            __Address__:  
-            Sekretariat  
-            Philipp-Rosenthal-Str. 55  
-            04103 Leipzig  
-            GERMANY  
-            Telefon: 0341 - 97 23800""")
-]
-
-impressum_page = dbc.Container(
-    [
-        html.Br(),
-        dbc.Row([
-            dbc.Col(html.H2("Impressum"),
-                    width="auto"),
-            dbc.Col(dbc.Button("EN",
-                               id="impressum_language_button",
-                               color="secondary"),
-                    width="auto")
-        ]),
-        html.Br(),
-        html.Div(impressum_ger,
-                 id="impressum_text"
-                 )
-    ],
-    style={
-        "textAlign": "justify",
-        "verticalAlign": "top!",
-        "minHeight": "100%!"
-    },
-)
 
 # index layout
 app.layout = url_bar_and_content_div
@@ -2060,7 +1415,7 @@ def download_button_click(n_cklicks, results_memory, transcripts_to_use):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False,
+    app.run_server(debug=True,
                    dev_tools_hot_reload=True,
                    host='0.0.0.0',
                    port=5000
