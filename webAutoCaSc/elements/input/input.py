@@ -1,7 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import html
 from dash import dcc
-from dash.dcc import Download
 
 
 variant_input_card = html.Div(

@@ -1,9 +1,6 @@
-import dash_bootstrap_components as dbc
-from dash import html
-from dash import dcc
-from dash.dcc import Download
 import pandas as pd
-
+from AutoCaSc_core.AutoCaSc import AutoCaSc, VERSION
+import copy
 
 ########## BACKEND ##########
 def score_variants(instances, inheritance):
