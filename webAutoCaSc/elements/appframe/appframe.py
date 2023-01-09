@@ -49,28 +49,9 @@ app.validation_layout = html.Div([
     landing_page,
     search_page,
     error_page,
-    dbc.Button(id="download_button"),
-    html.Div([
-        dbc.Container([
-            dbc.Card([
-                dbc.CardHeader(
-                    dbc.Tabs(
-                        id="card_tabs",
-                    )
-                ),
-                dbc.CardBody(
-                    html.P(id="card_content", className="card_text")
-                )
-            ])
-        ])
-    ]),
-    html.Div(id="loading_output"),
-    dcc.Dropdown(id="transcript_dropdown"),
     impressum_page,
     faq_page,
     news_page,
     tutorial_page,
-    footer,
-    dbc.Button(id="collapse_button_transcripts"),
-    dbc.Collapse(id="collapse_transcripts")
+    footer
 ])

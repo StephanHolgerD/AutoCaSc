@@ -7,9 +7,15 @@ get_display_variant = frontend.get_display_variant
 get_gene_badge = frontend.get_gene_badge
 get_casc_color = frontend.get_casc_color
 get_percentile = frontend.get_percentile
+get_status_badge =  frontend.get_status_badge
+def show_other_variant_column(results_memory):
+    if any([results_memory.get("instances").get(_variant).get("inheritance") == "comphet"
+            for _variant in results_memory.get("instances").keys()]):
+        return True
+    else:
+        return False
 
 def ResultCard(active_tab,transcripts_to_use,results_memory):
-    print('olaf')
     cell_style = {
         "padding": "5px",
         "padding-left": "12px"

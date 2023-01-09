@@ -49,54 +49,52 @@ get_results_page = frontend.get_results_page
 input_ok = frontend.input_ok
 
 
-for _item in ["navbar", "footer"]:
-    @app.callback(
-        Output(f"{_item}-collapse", "is_open"),
-        [Input(f"{_item}-toggler", "n_clicks")],
-        [State(f"{_item}-collapse", "is_open")])
-    def toggle_navbar_collapse(n, is_open):
-        if n:
-            return not is_open
-        return is_open
 
+
+
+#URL checker
+##checks the selected inheritance in the URL
 @app.callback(
-    Output("collapse_transcripts", "is_open"),
-    Output("collapse_transcripts", "children"),
-    Input("collapse_button_transcripts", "n_clicks"),
-    State("collapse_transcripts", "is_open"),
-    State("active_variant_tab", "data")
+    Output("query_memory", "data"),
+    Input("url", "pathname"),
+    State("query_memory", "data")
 )
-def load_all_hgvsc_notations(n, is_open, active_variant):
-    # this calls convert_variant() from "refseq_transcripts_converter.py" to get RefSeq transcripts via VEP REST API
-    if n:
-        if not is_open:
-            notations = convert_variant(active_variant.get("active_variant"))
-            notations_styled_children = []
-            if notations:
-                for _notation in notations:
-                    notations_styled_children.append(_notation)
-                    notations_styled_children.append(html.Br())
-                notations_styled = html.Div(notations_styled_children)
-            else:
-                notations_styled = "Sorry, none found."
-        else:
-            notations_styled = None
-        return not is_open, notations_styled
-    return is_open, ""
+def interpret_url_inheritance(pathname, query_memory):
+    # this extracts inheritance from URL in case the site is not accessed via landing page e.g. if results are refreshed
+    if "search" in pathname and query_memory is None:
+        inheritance = unquote(pathname).split("inheritance=")[-1].split("/")[0]
+        query_data = {"inheritance": inheritance}
+        return query_data
+    raise PreventUpdate
 
 
+##checks the variant in the URL
 @app.callback(
-    Output("warning-toast", "is_open"),
-    Input("page-content", "children"),
-    State("results_memory", "data")
+    Output("variant_queue_url", "data"),
+    Input("url", "pathname"),
+    State("variant_memory", "data")
 )
-def check_x_linkedness(_, results_memory):
-    if results_memory is not None:
-        for _variant, _instance_attributes in results_memory.get("instances").items():
-            if _instance_attributes.get("inheritance") == "x_linked":
-                if not _instance_attributes.get("vcf_string")[0] == "X":
-                    return True
-    return False
+def interpret_url_variants(pathname, variant_memory):
+    # this extracts variants from URL in case the site is not accessed via landing page e.g. if results are refreshed
+    if "search" in pathname and variant_memory is None:
+        variants = unquote(pathname).split("variants=")[-1].split("%")
+        variant_instances = [AutoCaSc(_variant, mode="web") for _variant in variants]
+        variant_queue = {"instances": {_instance.__dict__.get("variant"): _instance.__dict__ for _instance in
+                                       variant_instances}}
+        return variant_queue
+    elif "search" in pathname:
+        variants = unquote(pathname).split("variants=")[-1].split("%")
+        if any([_variant not in variant_memory.get("instances").keys() for _variant in variants]):
+            variant_instances = [AutoCaSc(_variant, mode="web") for _variant in variants]
+            variant_queue = {"instances": {_instance.__dict__.get("variant"): _instance.__dict__ for _instance in
+                                           variant_instances}}
+            return variant_queue
+    raise PreventUpdate
+
+
+
+
+#ContextChecker
 
 @app.callback([Output('page-content', 'children'),
               Output("query_memory", "clear_data"),
@@ -138,6 +136,33 @@ def display_page(pathname, results_memory):
         raise PreventUpdate
 
 
+
+
+
+#NavigationBar
+@app.callback(
+        Output("navbar-collapse", "is_open"),
+        [Input("navbar-toggler", "n_clicks")],
+        [State("navbar-collapse", "is_open")])
+def toggle_navbar_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+
+
+
+
+
+
+
+
+
+
+
+
+#InputPage
+##Input Validation
 @app.callback(
     Output("variant_input", "valid"),
     Output("variant_input", "invalid"),
@@ -161,6 +186,8 @@ def check_user_input(trigger_1, trigger_2, user_input):
     raise PreventUpdate
 
 
+#InputPage
+##URLstring
 @app.callback(
     Output("url", "pathname"),
     Input("search_button", "n_clicks"),
@@ -181,51 +208,81 @@ def search_button_click(n_clicks, variant_queue_input, variant_queue_url, inheri
         raise PreventUpdate
 
 
+
+
+
+
+#ResultPage
+## Xlinked Warning - Cave
 @app.callback(
-    Output("query_memory", "data"),
-    Input("url", "pathname"),
-    State("query_memory", "data")
+    Output("warning-toast", "is_open"),
+    Input("page-content", "children"),
+    State("results_memory", "data")
 )
-def interpret_url_inheritance(pathname, query_memory):
-    # this extracts inheritance from URL in case the site is not accessed via landing page e.g. if results are refreshed
-    if "search" in pathname and query_memory is None:
-        inheritance = unquote(pathname).split("inheritance=")[-1].split("/")[0]
-        query_data = {"inheritance": inheritance}
-        return query_data
-    raise PreventUpdate
+def check_x_linkedness(_, results_memory):
+    if results_memory is not None:
+        for _variant, _instance_attributes in results_memory.get("instances").items():
+            if _instance_attributes.get("inheritance") == "x_linked":
+                if not _instance_attributes.get("vcf_string")[0] == "X":
+                    return True
+    return False
 
+
+
+
+
+#ResultPage
+## ResultCard
 
 @app.callback(
-    Output("variant_queue_url", "data"),
-    Input("url", "pathname"),
-    State("variant_memory", "data")
+    Output("card_content", "children"),
+    Output("active_variant_tab", "data"),
+    Input("card_tabs", "active_tab"),  # todo: check out pattern-matching callbacks to avoid callback error
+    Input("transcripts_to_use_memory", "data"),
+    State("results_memory", "data"),
 )
-def interpret_url_variants(pathname, variant_memory):
-    # this extracts variants from URL in case the site is not accessed via landing page e.g. if results are refreshed
-    if "search" in pathname and variant_memory is None:
-        variants = unquote(pathname).split("variants=")[-1].split("%")
-        variant_instances = [AutoCaSc(_variant, mode="web") for _variant in variants]
-        variant_queue = {"instances": {_instance.__dict__.get("variant"): _instance.__dict__ for _instance in
-                                       variant_instances}}
-        return variant_queue
-    elif "search" in pathname:
-        variants = unquote(pathname).split("variants=")[-1].split("%")
-        if any([_variant not in variant_memory.get("instances").keys() for _variant in variants]):
-            variant_instances = [AutoCaSc(_variant, mode="web") for _variant in variants]
-            variant_queue = {"instances": {_instance.__dict__.get("variant"): _instance.__dict__ for _instance in
-                                           variant_instances}}
-            return variant_queue
-    raise PreventUpdate
+def get_tab_card(active_tab,transcripts_to_use,results_memory):
+    x =  ResultCard.ResultCard(active_tab,transcripts_to_use,results_memory)
+    return x
 
 
-def show_other_variant_column(results_memory):
-    if any([results_memory.get("instances").get(_variant).get("inheritance") == "comphet"
-            for _variant in results_memory.get("instances").keys()]):
-        return True
-    else:
-        return False
 
 
+
+#ResultPage
+##AltTransscripts Collapsing
+@app.callback(
+    Output("collapse_transcripts", "is_open"),
+    Output("collapse_transcripts", "children"),
+    Input("collapse_button_transcripts", "n_clicks"),
+    State("collapse_transcripts", "is_open"),
+    State("active_variant_tab", "data")
+)
+def load_all_hgvsc_notations(n, is_open, active_variant):
+    # this calls convert_variant() from "refseq_transcripts_converter.py" to get RefSeq transcripts via VEP REST API
+    if n:
+        if not is_open:
+            notations = convert_variant(active_variant.get("active_variant"))
+            notations_styled_children = []
+            if notations:
+                for _notation in notations:
+                    notations_styled_children.append(_notation)
+                    notations_styled_children.append(html.Br())
+                notations_styled = html.Div(notations_styled_children)
+            else:
+                notations_styled = "Sorry, none found."
+        else:
+            notations_styled = None
+        return not is_open, notations_styled
+    return is_open, ""
+
+
+
+
+
+
+#ResultPage
+##LoadAll HGVSC Annotations
 @app.callback(
     Output("transcripts_to_use_memory", "data"),
     Input("transcript_dropdown", "value"),
@@ -249,65 +306,6 @@ def update_transcripts_to_use(selected_transcript,
         _other_variant = results_memory.get("instances").get(_variant).get("other_variant")
         transcript_dict[_other_variant] = selected_transcript
     return transcript_dict
-
-
-@app.callback(
-    Output("card_content", "children"),
-    Output("active_variant_tab", "data"),
-    Input("card_tabs", "active_tab"),  # todo: check out pattern-matching callbacks to avoid callback error
-    Input("transcripts_to_use_memory", "data"),
-    State("results_memory", "data"),
-)
-def get_tab_card(active_tab,transcripts_to_use,results_memory):
-    x =  ResultCard.ResultCard(active_tab,transcripts_to_use,results_memory)
-    return x
-
-@app.callback(
-    Output("about_text", "children"),
-    Output("about_language_button", "children"),
-    Input("about_language_button", "n_clicks"),
-    State("about_language_button", "children")
-)
-def get_about_text(n_clicks, language):
-    # changes about page text between English and German
-    if not n_clicks:
-        raise PreventUpdate
-    if language == "DE":
-        return about_ger, "EN"
-    else:
-        return about_eng, "DE"
-
-
-@app.callback(
-    Output("impressum_text", "children"),
-    Output("impressum_language_button", "children"),
-    Input("impressum_language_button", "n_clicks"),
-    State("impressum_language_button", "children")
-)
-def get_impressum_text(n_clicks, language):
-    # changes impressum content between English and German
-    if not n_clicks:
-        raise PreventUpdate
-    if language == "DE":
-        return impressum_ger, "EN"
-    else:
-        return impressum_eng, "DE"
-
-
-@app.callback(
-    Output("faq_text", "children"),
-    Output("faq_language_button", "children"),
-    Input("faq_language_button", "n_clicks"),
-    State("faq_language_button", "children")
-)
-def get_faq_text(n_clicks, language):
-    # changes FAQ text between English and German
-    if not n_clicks:
-        raise PreventUpdate
-    if language == "DE":
-        return faq_ger, "EN"
-    else:
-        return faq_eng, "DE"
 
 ########## BACKEND ##########
 score_variants = backend.score_variants
@@ -370,9 +368,89 @@ def download_button_click(n_cklicks, results_memory, transcripts_to_use):
     x = download.download(results_memory, transcripts_to_use)
     return x
 
+
+
+
+
+
+
+#AboutPage
+##Language
+@app.callback(
+    Output("about_text", "children"),
+    Output("about_language_button", "children"),
+    Input("about_language_button", "n_clicks"),
+    State("about_language_button", "children")
+)
+def get_about_text(n_clicks, language):
+    # changes about page text between English and German
+    if not n_clicks:
+        raise PreventUpdate
+    if language == "DE":
+        return about_ger, "EN"
+    else:
+        return about_eng, "DE"
+
+
+#ImpressumPage
+##Language
+@app.callback(
+    Output("impressum_text", "children"),
+    Output("impressum_language_button", "children"),
+    Input("impressum_language_button", "n_clicks"),
+    State("impressum_language_button", "children")
+)
+def get_impressum_text(n_clicks, language):
+    # changes impressum content between English and German
+    if not n_clicks:
+        raise PreventUpdate
+    if language == "DE":
+        return impressum_ger, "EN"
+    else:
+        return impressum_eng, "DE"
+
+#FAQPage
+##Language
+@app.callback(
+    Output("faq_text", "children"),
+    Output("faq_language_button", "children"),
+    Input("faq_language_button", "n_clicks"),
+    State("faq_language_button", "children")
+)
+def get_faq_text(n_clicks, language):
+    # changes FAQ text between English and German
+    if not n_clicks:
+        raise PreventUpdate
+    if language == "DE":
+        return faq_ger, "EN"
+    else:
+        return faq_eng, "DE"
+
+
+@app.callback(
+        Output("footer-collapse", "is_open"),
+        [Input("footer-toggler", "n_clicks")],
+        [State("footer-collapse", "is_open")])
+def toggle_footer_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run_server(debug=True,
                    dev_tools_hot_reload=True,
                    host='0.0.0.0',
                    port=5000
                    )
+
+
+
+
+
+########### TabCard wird zusammen mit den backend memory storage initialisiert --> callback wird ausgefuert auch wenn es den input noch nicht gibt --> Fehler ; loesung Tabcard output gibt es erst wenn resultpage gealaden wurde
