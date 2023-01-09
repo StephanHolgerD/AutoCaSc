@@ -17,8 +17,7 @@ stores = ["query_memory",
           "variant_queue_url",
           "variant_memory",
           "results_memory",
-          "transcripts_to_use_memory",
-          "active_variant_tab"]
+          "transcripts_to_use_memory"]
 
 url_bar_and_content_div = html.Div(
     [

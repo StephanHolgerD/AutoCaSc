@@ -107,7 +107,6 @@ def interpret_url_variants(pathname, variant_memory):
                Input("results_memory", "data")])
 def display_page(pathname, results_memory):
     ctx = dash.callback_context
-    print(dir(ctx))
     if "results_memory" in ctx.triggered[0]['prop_id'] and results_memory is not None:
         print("results page")
         return [get_results_page(results_memory)] + [False for _store in range(5)] + ["center"]
@@ -233,6 +232,9 @@ def check_x_linkedness(_, results_memory):
 
 #ResultPage
 ## ResultCard
+
+
+
 
 @app.callback(
     Output("card_content", "children"),

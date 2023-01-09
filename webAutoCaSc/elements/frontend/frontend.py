@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import html
 from numpy import array
+from dash import dcc
 
 
 ########## FRONTEND ##########
@@ -34,7 +35,13 @@ def get_results_page(results_memory):
             tab_num += 1
 
         results_page = dbc.Container(
-            dbc.Card(
+            [
+                html.Div(
+                    [
+                    dcc.Store(id="active_variant_tab"),
+                    ],style={'display': 'none'}
+                    ),
+                dbc.Card(
                 [
                     dbc.CardHeader(
                         dbc.Row(
@@ -61,8 +68,8 @@ def get_results_page(results_memory):
                         style={"paddingBottom": "0"}
                     )
                 ]
-            ),
-            style={"width": "100%",
+                )],
+                style={"width": "100%",
                    # "minHeight": "calc(100vh - 150px)"
                    }
         )
