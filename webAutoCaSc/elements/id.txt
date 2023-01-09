@@ -1,0 +1,40 @@
+frontend/frontend.py:                tab_id="overview_tab"
+frontend/frontend.py:            tab_list.append(dbc.Tab(label=get_display_variant(_variant), tab_id=f"tab_{tab_num}"))
+frontend/frontend.py:                    dcc.Store(id="active_variant_tab"),
+frontend/frontend.py:                                    id="card_tabs",
+frontend/frontend.py:                        html.P(id="card_content"),
+frontend/frontend.py:                dbc.Badge(status_code, color=error_color, className="mx-2", id=f"return_badge_{i}"),
+frontend/frontend.py:                    dbc.Badge("SysID", color=sysid_color, className="mx-2", id="sysid_badge"),
+frontend/frontend.py:                    dbc.Badge("OMIM", color=omim_color, className="mx-2", id="gene_badge"),
+frontend/frontend.py:    #             dbc.Badge(status_code, color=error_color, className="mx-2", id=f"return_badge_{i}"),
+frontend/callbacks/ResultCard.py:                           id=f"other_variant_target_{i}"),
+frontend/callbacks/ResultCard.py:                                       id=f"hgvs_target_{i}"),
+frontend/callbacks/ResultCard.py:                                       id="download_button",
+frontend/callbacks/ResultCard.py:                                                       id="download_button",
+frontend/callbacks/ResultCard.py:                                                        id="percentile_target"),
+frontend/callbacks/ResultCard.py:                                                            id="hover-target",
+frontend/callbacks/ResultCard.py:                                    id=f"{_subscore}_description",
+frontend/callbacks/ResultCard.py:                                    id=f"{_subscore}_explanation",
+frontend/callbacks/ResultCard.py:                                    id=f"cell_{_parameter}")
+frontend/callbacks/ResultCard.py:                                 id="transcript_dropdown"
+frontend/callbacks/ResultCard.py:                            id="collapse_button_transcripts",
+frontend/callbacks/ResultCard.py:                            id="collapse_transcripts",
+frontend/input/input.py:            id="variant_input",
+frontend/input/input.py:            id="inheritance_input",
+frontend/landingpage/landingpage.py:                        id="search_button"
+frontend/static_pages/about/about.py:                           id="about_language_button",
+frontend/static_pages/about/about.py:             id="about_text"),
+frontend/static_pages/faq/faq.py:                           id="faq_language_button",
+frontend/static_pages/faq/faq.py:             id="faq_text",
+frontend/static_pages/header_footer/footer.py:            dbc.NavbarToggler(id="footer-toggler"),
+frontend/static_pages/header_footer/footer.py:                id="footer-collapse",
+frontend/static_pages/header_footer/navbar.py:                    dbc.NavbarToggler(id="navbar-toggler"),
+frontend/static_pages/header_footer/navbar.py:                        id="navbar-collapse",
+frontend/static_pages/header_footer/urlbar.py:        dcc.Store(id=_store) for _store in stores] + [
+frontend/static_pages/header_footer/urlbar.py:        dcc.Location(id='url', refresh=False),
+frontend/static_pages/header_footer/urlbar.py:        Download(id="download"),
+frontend/static_pages/header_footer/urlbar.py:            id="warning-toast",
+frontend/static_pages/header_footer/urlbar.py:                id='page-content',
+frontend/static_pages/impressum/impressum.py:                               id="impressum_language_button",
+frontend/static_pages/impressum/impressum.py:                 id="impressum_text"
+frontend/static_pages/news/news.py:            id="faq_text")
