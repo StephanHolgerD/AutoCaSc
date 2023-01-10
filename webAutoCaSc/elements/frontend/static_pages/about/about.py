@@ -96,13 +96,13 @@ about_page = dbc.Container([
         dbc.Col(html.H2("About"),
                 width="auto"),
         dbc.Col(dbc.Button("DE",
-                           id="about_language_button",
+                           id="frontend_staticpages_about_about_about_language_button",
                            color="secondary"),
                 width="auto")
     ]),
     html.Br(),
     html.Div(about_eng,
-             id="about_text"),
+             id="frontend_staticpages_about_about_about_text"),
     html.Br(),
     citations
 ])

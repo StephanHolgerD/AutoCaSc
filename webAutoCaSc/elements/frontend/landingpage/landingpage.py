@@ -26,7 +26,7 @@ landing_page = dbc.Container(
                     dbc.Button(
                         "Start search",
                         color="primary",
-                        id="search_button"
+                        id="frontend_landingpage_landingpage_search_button"
                     ),
                     style={"paddingBottom": "10px"}
                 )

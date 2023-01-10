@@ -27,9 +27,9 @@ def get_results_page(results_memory):
         if len(results_memory.get("instances").items()) > 1:
             tab_list.append(dbc.Tab(
                 label="Overview",
-                tab_id="overview_tab"
+                tab_id="frontend_frontend_overview_tab"
             ))
-            initial_tab = "overview_tab"
+            initial_tab = "frontend_frontend_overview_tab"
         for _variant, _instance_attributes in results_memory.get("instances").items():
             tab_list.append(dbc.Tab(label=get_display_variant(_variant), tab_id=f"tab_{tab_num}"))
             tab_num += 1
@@ -38,7 +38,7 @@ def get_results_page(results_memory):
             [
                 html.Div(
                     [
-                    dcc.Store(id="active_variant_tab"),
+                    dcc.Store(id="frontend_frontend_active_variant_tab"),
                     ],style={'display': 'none'}
                     ),
                 dbc.Card(
@@ -48,7 +48,7 @@ def get_results_page(results_memory):
                             [
                                 dbc.Tabs(
                                     tab_list,
-                                    id="card_tabs",
+                                    id="frontend_frontend_card_tabs",
                                     active_tab=initial_tab,
                                 ),
 
@@ -64,7 +64,7 @@ def get_results_page(results_memory):
                         ),
                     ),
                     dbc.CardBody(
-                        html.P(id="card_content"),
+                        html.P(id="frontend_frontend_card_content"),
                         style={"paddingBottom": "0"}
                     )
                 ]
@@ -123,8 +123,8 @@ def get_gene_badge(_instance_attributes):
     if sysid_color:
         sysid_badge = html.Div(
                 [
-                    dbc.Badge("SysID", color=sysid_color, className="mx-2", id="sysid_badge"),
-                    dbc.Tooltip(sysid, target="sysid_badge")
+                    dbc.Badge("SysID", color=sysid_color, className="mx-2", id="frontend_frontend_sysid_badge"),
+                    dbc.Tooltip(sysid, target="frontend_frontend_sysid_badge")
                 ]
             )
         omim_color = "warning"
@@ -135,8 +135,8 @@ def get_gene_badge(_instance_attributes):
         omim_ids = omim_ids.split(",")
         omim_badge = html.Div(
                 [
-                    dbc.Badge("OMIM", color=omim_color, className="mx-2", id="gene_badge"),
-                    dbc.Tooltip(omim_comment + str(omim_ids), target="gene_badge")
+                    dbc.Badge("OMIM", color=omim_color, className="mx-2", id="frontend_frontend_gene_badge"),
+                    dbc.Tooltip(omim_comment + str(omim_ids), target="frontend_frontend_gene_badge")
                 ]
             )
     else:

@@ -3,6 +3,7 @@ from dash import html
 from dash import dcc
 from elements.frontend import frontend
 
+get_error = frontend.get_error
 get_display_variant = frontend.get_display_variant
 get_gene_badge = frontend.get_gene_badge
 get_casc_color = frontend.get_casc_color
@@ -20,7 +21,7 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
         "padding": "5px",
         "padding-left": "12px"
     }
-    if active_tab == "overview_tab":
+    if active_tab == "frontend_frontend_overview_tab":
         if show_other_variant_column(results_memory):
             other_variant_column_header = html.Th("Corresponding Variant")
         else:
@@ -116,7 +117,7 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
                 [
                     dbc.Col(html.H3("Overview on variants")),
                     dbc.Col(dbc.Button("Download",
-                                       id="download_button",
+                                       id="frontend_callbacks_resultcard_download_button",
                                        style={
                                            # "margin-bottom": "10px",
                                            "marginTop": "0",
@@ -153,7 +154,7 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
 
         if len(results_memory.get("instances")) == 1:
             download_button = dbc.Col(dbc.Button("Download",
-                                                       id="download_button",
+                                                       id="frontend_callbacks_resultcard_download_button",
                                                        color="secondary",
                                                        style={
                                                            "marginBottom": "10px",
@@ -193,12 +194,12 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
                                                 dbc.Col(
                                                     html.H3(
                                                         f"Candidate Score:",
-                                                        id="percentile_target"),
+                                                        id="frontend_callbacks_resultcard_percentile_target"),
                                                     width="auto"
                                                 ),
                                                 dbc.Col(
                                                     html.H3(_instance_attributes.get('candidate_score'),
-                                                            id="hover-target",
+                                                            id="frontend_callbacks_resultcard_hover-target",
                                                             style={
                                                                 "border": "3px",
                                                                 "borderStyle": "solid",
@@ -213,7 +214,7 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
                                                 dbc.Popover(
                                                     f"About {get_percentile(_instance_attributes.get('candidate_score'))} of the variants scored "
                                                     f"at the Institute for Human Genetics Leipzig had a lower score than this.",
-                                                    target="hover-target",
+                                                    target="frontend_callbacks_resultcard_hover-target",
                                                     body=True,
                                                     trigger="hover",
                                                 )
@@ -373,7 +374,7 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
                                      "marginTop": "1px",
                                      "paddingTop": "0px"
                                  },
-                                 id="transcript_dropdown"
+                                 id="frontend_callbacks_resultcard_transcript_dropdown"
                                  ))
                             ],
                             className="g-0",
@@ -433,7 +434,7 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
                             [
                                 "Load all HGVSC notations (coding only)"
                             ],
-                            id="collapse_button_transcripts",
+                            id="frontend_callbacks_resultcard_collapse_button_transcripts",
                             className="mb-3",
                             n_clicks=0,
                             color="secondary"
@@ -444,7 +445,7 @@ def ResultCard(active_tab,transcripts_to_use,results_memory):
                     dbc.Col(
                         dbc.Collapse(
                             dbc.Card(dbc.CardBody("This content is hidden")),
-                            id="collapse_transcripts",
+                            id="frontend_callbacks_resultcard_collapse_transcripts",
                             is_open=False
                     )
                     )

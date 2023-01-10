@@ -197,7 +197,7 @@ faq_page = dbc.Container([
         dbc.Col(html.H2("FAQ"),
                 width="auto"),
         dbc.Col(dbc.Button("DE",
-                           id="faq_language_button",
+                           id="frontend_staticpages_faq_faq_faq_language_button",
                            color="secondary"),
                 width="auto")
     ]),

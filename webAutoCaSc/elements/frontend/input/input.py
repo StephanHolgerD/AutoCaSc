@@ -7,7 +7,7 @@ variant_input_card = html.Div(
     [
         dbc.Input(
             type="text",
-            id="variant_input",
+            id="frontend_input_input_variant_input",
             placeholder="e.g. chrX-12345-T-C",
             autoFocus=True
         ),
@@ -27,7 +27,7 @@ variant_input_card = html.Div(
 misc_input_card = html.Div(
     [
         dbc.RadioItems(
-            id="inheritance_input",
+            id="frontend_input_input_inheritance_input",
             options=[
                 {"label": "De novo", "value": "de_novo"},
                 {"label": "Inherited dominant", "value": "ad_inherited"},
