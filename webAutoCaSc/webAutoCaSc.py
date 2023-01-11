@@ -20,6 +20,41 @@ from urllib.parse import unquote, quote
 import os, sys
 from AutoCaSc_core.AutoCaSc import AutoCaSc, VERSION
 from refseq_transcripts_converter import convert_variant
+from elements import ids
+
+ids = ids.ids
+
+frontend_frontend_overview_tab = ids["frontend_frontend_overview_tab"]
+frontend_frontend_active_variant_tab =ids["frontend_frontend_active_variant_tab"]
+frontend_frontend_card_tabs = ids["frontend_frontend_card_tabs"]
+frontend_frontend_card_content = ids["frontend_frontend_card_content"]
+frontend_frontend_sysid_badge = ids["frontend_frontend_sysid_badge"]
+frontend_frontend_gene_badge = ids["frontend_frontend_gene_badge"]
+frontend_callbacks_resultcard_download_button = ids["frontend_callbacks_resultcard_download_button"]
+frontend_callbacks_resultcard_percentile_target = ids["frontend_callbacks_resultcard_percentile_target"]
+frontend_callbacks_resultcard_hover_target = ids["frontend_callbacks_resultcard_hover-target"]
+frontend_callbacks_resultcard_transcript_dropdown = ids["frontend_callbacks_resultcard_transcript_dropdown"]
+frontend_callbacks_resultcard_collapse_button_transcripts = ids["frontend_callbacks_resultcard_collapse_button_transcripts"]
+frontend_callbacks_resultcard_collapse_transcripts = ids["frontend_callbacks_resultcard_collapse_transcripts"]
+frontend_input_input_variant_input = ids["frontend_input_input_variant_input"]
+frontend_input_input_inheritance_input = ids["frontend_input_input_inheritance_input"]
+frontend_landingpage_landingpage_search_button = ids["frontend_landingpage_landingpage_search_button"]
+frontend_staticpages_about_about_about_language_button = ids["frontend_staticpages_about_about_about_language_button"]
+frontend_staticpages_about_about_about_text = ids["frontend_staticpages_about_about_about_text"]
+frontend_staticpages_faq_faq_faq_language_button = ids["frontend_staticpages_faq_faq_faq_language_button"]
+frontend_staticpages_faq_faq_faq_text = ids["frontend_staticpages_faq_faq_faq_text"]
+frontend_staticpages_header_footer_footer_footer_toggler = ids["frontend_staticpages_header_footer_footer_footer-toggler"]
+frontend_staticpages_header_footer_footer_footer_collapse = ids["frontend_staticpages_header_footer_footer_footer-collapse"]
+frontend_staticpages_header_footer_navbar_navbar_toggler = ids["frontend_staticpages_header_footer_navbar_navbar-toggler"]
+frontend_staticpages_header_footer_navbar_navbar_collapse = ids["frontend_staticpages_header_footer_navbar_navbar-collapse"]
+url = ids["url"]
+frontend_staticpages_header_footer_urlbar_download = ids["frontend_staticpages_header_footer_urlbar_download"]
+frontend_staticpages_header_footer_urlbar_warning_toast = ids["frontend_staticpages_header_footer_urlbar_warning-toast"]
+frontend_staticpages_impressum_impressum_page_content = ids["frontend_staticpages_impressum_impressum_page-content"]
+frontend_staticpages_impressum_impressum_impressum_language_button = ids["frontend_staticpages_impressum_impressum_impressum_language_button"]
+frontend_staticpages_impressum_impressum_impressum_text = ids["frontend_staticpages_impressum_impressum_impressum_text"]
+frontend_staticpages_news_news_faq_text = ids["frontend_staticpages_news_news_faq_text"]
+
 
 
 landing_page = landingpagetxt.landing_page
@@ -56,7 +91,7 @@ input_ok = frontend.input_ok
 ##checks the selected inheritance in the URL
 @app.callback(
     Output("query_memory", "data"),
-    Input("url", "pathname"),
+    Input(url, "pathname"),
     State("query_memory", "data")
 )
 def interpret_url_inheritance(pathname, query_memory):
@@ -71,7 +106,7 @@ def interpret_url_inheritance(pathname, query_memory):
 ##checks the variant in the URL
 @app.callback(
     Output("variant_queue_url", "data"),
-    Input("url", "pathname"),
+    Input(url, "pathname"),
     State("variant_memory", "data")
 )
 def interpret_url_variants(pathname, variant_memory):
@@ -96,14 +131,14 @@ def interpret_url_variants(pathname, variant_memory):
 
 #ContextChecker
 
-@app.callback([Output('page-content', 'children'),
+@app.callback([Output(frontend_staticpages_impressum_impressum_page_content, 'children'),
               Output("query_memory", "clear_data"),
               Output("variant_queue_input", "clear_data"),
               Output("variant_queue_url", "clear_data"),
               Output("results_memory", "clear_data"),
               Output("transcripts_to_use_memory", "clear_data"),
-              Output("page-content", "align")],
-              [Input('url', 'pathname'),
+              Output(frontend_staticpages_impressum_impressum_page_content, "align")],
+              [Input(url, 'pathname'),
                Input("results_memory", "data")])
 def display_page(pathname, results_memory):
     ctx = dash.callback_context
@@ -141,7 +176,7 @@ def display_page(pathname, results_memory):
 #NavigationBar
 @app.callback(
         Output("navbar-collapse", "is_open"),
-        [Input("navbar-toggler", "n_clicks")],
+        [Input(frontend_staticpages_header_footer_navbar_navbar_toggler, "n_clicks")],
         [State("navbar-collapse", "is_open")])
 def toggle_navbar_collapse(n, is_open):
     if n:
@@ -163,12 +198,12 @@ def toggle_navbar_collapse(n, is_open):
 #InputPage
 ##Input Validation
 @app.callback(
-    Output("frontend_input_input_variant_input", "valid"),
-    Output("frontend_input_input_variant_input", "invalid"),
+    Output(frontend_input_input_variant_input, "valid"),
+    Output(frontend_input_input_variant_input, "invalid"),
     Output("variant_queue_input", "data"),
-    [Input("frontend_input_input_variant_input", "n_blur"),
-     Input("frontend_input_input_inheritance_input", "value")],
-    [State("frontend_input_input_variant_input", "value")]
+    [Input(frontend_input_input_variant_input, "n_blur"),
+     Input(frontend_input_input_inheritance_input, "value")],
+    [State(frontend_input_input_variant_input, "value")]
 )
 def check_user_input(trigger_1, trigger_2, user_input):
     # checks if variants entered fit either HGVS or VCF notation,
@@ -188,11 +223,11 @@ def check_user_input(trigger_1, trigger_2, user_input):
 #InputPage
 ##URLstring
 @app.callback(
-    Output("url", "pathname"),
-    Input("frontend_landingpage_landingpage_search_button", "n_clicks"),
+    Output(url, "pathname"),
+    Input(frontend_landingpage_landingpage_search_button, "n_clicks"),
     State("variant_queue_input", "data"),
     State("variant_queue_url", "data"),
-    State("frontend_input_input_inheritance_input", "value")
+    State(frontend_input_input_inheritance_input, "value")
 )
 def search_button_click(n_clicks, variant_queue_input, variant_queue_url, inheritance):
     # by clicking the "Search" button on the landing page, the URL is updated, triggering the calculation and display
@@ -214,8 +249,8 @@ def search_button_click(n_clicks, variant_queue_input, variant_queue_url, inheri
 #ResultPage
 ## Xlinked Warning - Cave
 @app.callback(
-    Output("warning-toast", "is_open"),
-    Input("page-content", "children"),
+    Output(frontend_staticpages_header_footer_urlbar_warning_toast, "is_open"),
+    Input(frontend_staticpages_impressum_impressum_page_content, "children"),
     State("results_memory", "data")
 )
 def check_x_linkedness(_, results_memory):
@@ -237,9 +272,9 @@ def check_x_linkedness(_, results_memory):
 
 
 @app.callback(
-    Output("frontend_frontend_card_content", "children"),
-    Output("frontend_frontend_active_variant_tab", "data"),
-    Input("frontend_frontend_card_tabs", "active_tab"),  # todo: check out pattern-matching callbacks to avoid callback error
+    Output(frontend_frontend_card_content, "children"),
+    Output(frontend_frontend_active_variant_tab, "data"),
+    Input(frontend_frontend_card_tabs, "active_tab"),  # todo: check out pattern-matching callbacks to avoid callback error
     Input("transcripts_to_use_memory", "data"),
     State("results_memory", "data"),
 )
@@ -254,11 +289,11 @@ def get_tab_card(active_tab,transcripts_to_use,results_memory):
 #ResultPage
 ##AltTransscripts Collapsing
 @app.callback(
-    Output("frontend_callbacks_resultcard_collapse_transcripts", "is_open"),
-    Output("frontend_callbacks_resultcard_collapse_transcripts", "children"),
-    Input("frontend_callbacks_resultcard_collapse_button_transcripts", "n_clicks"),
-    State("frontend_callbacks_resultcard_collapse_transcripts", "is_open"),
-    State("frontend_frontend_active_variant_tab", "data")
+    Output(frontend_callbacks_resultcard_collapse_transcripts, "is_open"),
+    Output(frontend_callbacks_resultcard_collapse_transcripts, "children"),
+    Input(frontend_callbacks_resultcard_collapse_button_transcripts, "n_clicks"),
+    State(frontend_callbacks_resultcard_collapse_transcripts, "is_open"),
+    State(frontend_frontend_active_variant_tab, "data")
 )
 def load_all_hgvsc_notations(n, is_open, active_variant):
     # this calls convert_variant() from "refseq_transcripts_converter.py" to get RefSeq transcripts via VEP REST API
@@ -287,9 +322,9 @@ def load_all_hgvsc_notations(n, is_open, active_variant):
 ##LoadAll HGVSC Annotations
 @app.callback(
     Output("transcripts_to_use_memory", "data"),
-    Input("frontend_callbacks_resultcard_transcript_dropdown", "value"),
+    Input(frontend_callbacks_resultcard_transcript_dropdown, "value"),
     State("transcripts_to_use_memory", "data"),
-    State("frontend_frontend_card_tabs", "active_tab"),
+    State(frontend_frontend_card_tabs, "active_tab"),
     State("results_memory", "data")
 )
 def update_transcripts_to_use(selected_transcript,
@@ -356,8 +391,8 @@ def calculate_results(variant_memory, query_memory):
 
 
 @app.callback(
-    Output("download", "data"),
-    Input("frontend_callbacks_resultcard_download_button", "n_clicks"),
+    Output(frontend_staticpages_header_footer_urlbar_download, "data"),
+    Input(frontend_callbacks_resultcard_download_button, "n_clicks"),
     State("results_memory", "data"),
     State("transcripts_to_use_memory", "data")
 )
@@ -379,10 +414,10 @@ def download_button_click(n_cklicks, results_memory, transcripts_to_use):
 #AboutPage
 ##Language
 @app.callback(
-    Output("frontend_staticpages_about_about_about_text", "children"),
-    Output("frontend_staticpages_about_about_about_language_button", "children"),
-    Input("frontend_staticpages_about_about_about_language_button", "n_clicks"),
-    State("frontend_staticpages_about_about_about_language_button", "children")
+    Output(frontend_staticpages_about_about_about_text, "children"),
+    Output(frontend_staticpages_about_about_about_language_button, "children"),
+    Input(frontend_staticpages_about_about_about_language_button, "n_clicks"),
+    State(frontend_staticpages_about_about_about_language_button, "children")
 )
 def get_about_text(n_clicks, language):
     # changes about page text between English and German
@@ -397,10 +432,10 @@ def get_about_text(n_clicks, language):
 #ImpressumPage
 ##Language
 @app.callback(
-    Output("impressum_text", "children"),
-    Output("impressum_language_button", "children"),
-    Input("impressum_language_button", "n_clicks"),
-    State("impressum_language_button", "children")
+    Output(frontend_staticpages_impressum_impressum_impressum_text, "children"),
+    Output(frontend_staticpages_impressum_impressum_impressum_language_button, "children"),
+    Input(frontend_staticpages_impressum_impressum_impressum_language_button, "n_clicks"),
+    State(frontend_staticpages_impressum_impressum_impressum_language_button, "children")
 )
 def get_impressum_text(n_clicks, language):
     # changes impressum content between English and German
@@ -414,10 +449,10 @@ def get_impressum_text(n_clicks, language):
 #FAQPage
 ##Language
 @app.callback(
-    Output("faq_text", "children"),
-    Output("frontend_staticpages_faq_faq_faq_language_button", "children"),
-    Input("frontend_staticpages_faq_faq_faq_language_button", "n_clicks"),
-    State("frontend_staticpages_faq_faq_faq_language_button", "children")
+    Output(frontend_staticpages_faq_faq_faq_text, "children"),
+    Output(frontend_staticpages_faq_faq_faq_language_button, "children"),
+    Input(frontend_staticpages_faq_faq_faq_language_button, "n_clicks"),
+    State(frontend_staticpages_faq_faq_faq_language_button, "children")
 )
 def get_faq_text(n_clicks, language):
     # changes FAQ text between English and German
@@ -430,9 +465,9 @@ def get_faq_text(n_clicks, language):
 
 
 @app.callback(
-        Output("footer-collapse", "is_open"),
-        [Input("footer-toggler", "n_clicks")],
-        [State("footer-collapse", "is_open")])
+        Output(frontend_staticpages_header_footer_footer_footer_collapse, "is_open"),
+        [Input(frontend_staticpages_header_footer_footer_footer_toggler, "n_clicks")],
+        [State(frontend_staticpages_header_footer_footer_footer_collapse, "is_open")])
 def toggle_footer_collapse(n, is_open):
     if n:
         return not is_open

@@ -81,13 +81,13 @@ impressum_page = dbc.Container(
             dbc.Col(html.H2("Impressum"),
                     width="auto"),
             dbc.Col(dbc.Button("EN",
-                               id="impressum_language_button",
+                               id="frontend_staticpages_impressum_impressum_impressum_language_button",
                                color="secondary"),
                     width="auto")
         ]),
         html.Br(),
         html.Div(impressum_ger,
-                 id="impressum_text"
+                 id="frontend_staticpages_impressum_impressum_impressum_text"
                  )
     ],
     style={

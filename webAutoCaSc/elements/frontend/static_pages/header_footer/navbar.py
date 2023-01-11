@@ -13,7 +13,7 @@ navbar = dbc.Navbar(
                         href="/",
                         style={"textDecoration": "none"}
                     ),
-                    dbc.NavbarToggler(id="navbar-toggler"),
+                    dbc.NavbarToggler(id="frontend_staticpages_header_footer_navbar_navbar-toggler"),
                     dbc.Collapse(
                         dbc.Row(
                             [

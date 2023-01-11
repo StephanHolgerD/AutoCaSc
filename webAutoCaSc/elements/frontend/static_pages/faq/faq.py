@@ -203,6 +203,6 @@ faq_page = dbc.Container([
     ]),
     html.Br(),
     html.Div(faq_eng,
-             id="faq_text",
+             id="frontend_staticpages_faq_faq_faq_text",
              style={"textAlign": "justify"})
 ])

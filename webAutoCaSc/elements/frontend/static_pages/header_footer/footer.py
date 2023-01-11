@@ -11,7 +11,7 @@ footer = dbc.Navbar(
                          ),
                 href="https://creativecommons.org/licenses/by-nc-sa/4.0/",
                 target="_blank"),
-            dbc.NavbarToggler(id="footer-toggler"),
+            dbc.NavbarToggler(id="frontend_staticpages_header_footer_footer_footer-toggler"),
             dbc.Collapse(
                 dbc.Row(
                     [
@@ -39,7 +39,7 @@ footer = dbc.Navbar(
                     className="ms-auto flex-nowrap mt-3 mt-md-0 g-0",
                     align="center",
                 ),
-                id="footer-collapse",
+                id="frontend_staticpages_header_footer_footer_footer-collapse",
                 navbar=True,
             )
         ]

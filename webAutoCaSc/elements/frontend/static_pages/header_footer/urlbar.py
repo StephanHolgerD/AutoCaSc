@@ -23,11 +23,11 @@ url_bar_and_content_div = html.Div(
     [
         dcc.Store(id=_store) for _store in stores] + [
         dcc.Location(id='url', refresh=False),
-        Download(id="download"),
+        Download(id="frontend_staticpages_header_footer_urlbar_download"),
         navbar,
         dbc.Toast(
             "You have selected X-linked inheritance, but the variant is not located on the X-chromosome.",
-            id="warning-toast",
+            id="frontend_staticpages_header_footer_urlbar_warning-toast",
             header="CAVE!",
             is_open=False,
             dismissable=True,
@@ -42,7 +42,7 @@ url_bar_and_content_div = html.Div(
         ),
         dbc.Container(
             dbc.Row(
-                id='page-content',
+                id='frontend_staticpages_impressum_impressum_page-content',
                 style={
                     "marginTop": "70px",
                     "marginBottom": "63px",

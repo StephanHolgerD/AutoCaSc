@@ -25,7 +25,7 @@ news_page = dbc.Container(
                     """
                 )
             ],
-            id="faq_text")
+            id="frontend_staticpages_faq_faq_faq_text")
     ],
     style={"height": "calc(100vh - 150px)"}
 )
