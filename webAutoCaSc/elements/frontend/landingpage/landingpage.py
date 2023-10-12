@@ -6,6 +6,8 @@ from elements.frontend.input import input as inputtxt
 
 variant_input_card = inputtxt.variant_input_card 
 misc_input_card = inputtxt.misc_input_card
+genomeversion_input_card = inputtxt.genomeversion_input_card
+
 landing_page = dbc.Container(
     [
         dbc.Row(
@@ -14,8 +16,11 @@ landing_page = dbc.Container(
                     dcc.Markdown("""# Welcome to **webAutoCaSc**,\n #### a webinterface for the automatic CaSc \
                     classification of research candidate variants in neurodevelopmental disorders."""),
                     dcc.Markdown("Enter your variant (hg19) of interest and presumed inheritance mode here:"),
+					genomeversion_input_card,
+					
                     variant_input_card,
                     misc_input_card
+					
                 ]
             ),
         ),

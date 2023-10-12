@@ -72,6 +72,7 @@ class AutoCaSc:
         self.other_impact = other_impact  # impact of corresponding comphet variant
         self.other_variant = other_variant  # corresponding comphet variant
         self.assembly = assembly  # either GRCh37 or GRCh38
+        print(self.assembly)
         self.status_code = 200  # initial value is set to 200 = all good
         self.family_history = family_history  # variant cosegregates (bool)
         self.num_transcripts = False  # number of affected transcripts

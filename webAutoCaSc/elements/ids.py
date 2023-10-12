@@ -13,6 +13,7 @@ ids={
     "frontend_callbacks_resultcard_collapse_transcripts":"frontend_callbacks_resultcard_collapse_transcripts",
     "frontend_input_input_variant_input":"frontend_input_input_variant_input",
     "frontend_input_input_inheritance_input":"frontend_input_input_inheritance_input",
+    "frontend_input_input_genomeversion_input":"frontend_input_input_genomeversion_input",
     "frontend_landingpage_landingpage_search_button":"frontend_landingpage_landingpage_search_button",
     "frontend_staticpages_about_about_about_language_button":"frontend_staticpages_about_about_about_language_button",
     "frontend_staticpages_about_about_about_text":"frontend_staticpages_about_about_about_text",

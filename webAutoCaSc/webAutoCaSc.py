@@ -19,6 +19,7 @@ from dash.exceptions import PreventUpdate
 from urllib.parse import unquote, quote
 import os, sys
 from AutoCaSc_core.AutoCaSc import AutoCaSc, VERSION
+
 from refseq_transcripts_converter import convert_variant
 from elements import ids
 
@@ -38,6 +39,7 @@ frontend_callbacks_resultcard_collapse_button_transcripts = ids["frontend_callba
 frontend_callbacks_resultcard_collapse_transcripts = ids["frontend_callbacks_resultcard_collapse_transcripts"]
 frontend_input_input_variant_input = ids["frontend_input_input_variant_input"]
 frontend_input_input_inheritance_input = ids["frontend_input_input_inheritance_input"]
+frontend_input_input_genomeversion_input = ids["frontend_input_input_genomeversion_input"]
 frontend_landingpage_landingpage_search_button = ids["frontend_landingpage_landingpage_search_button"]
 frontend_staticpages_about_about_about_language_button = ids["frontend_staticpages_about_about_about_language_button"]
 frontend_staticpages_about_about_about_text = ids["frontend_staticpages_about_about_about_text"]
@@ -113,14 +115,17 @@ def interpret_url_variants(pathname, variant_memory):
     # this extracts variants from URL in case the site is not accessed via landing page e.g. if results are refreshed
     if "search" in pathname and variant_memory is None:
         variants = unquote(pathname).split("variants=")[-1].split("%")
-        variant_instances = [AutoCaSc(_variant, mode="web") for _variant in variants]
+        genomeversion = unquote(pathname).split("genomeversion=")[-1].split("/")[0]
+        variant_instances = [AutoCaSc(_variant, mode="web", assembly=genomeversion) for _variant in variants]
         variant_queue = {"instances": {_instance.__dict__.get("variant"): _instance.__dict__ for _instance in
                                        variant_instances}}
         return variant_queue
     elif "search" in pathname:
         variants = unquote(pathname).split("variants=")[-1].split("%")
+        genomeversion = unquote(pathname).split("genomeversion=")[-1].split("/")[0]
+
         if any([_variant not in variant_memory.get("instances").keys() for _variant in variants]):
-            variant_instances = [AutoCaSc(_variant, mode="web") for _variant in variants]
+            variant_instances = [AutoCaSc(_variant, mode="web", assembly=genomeversion) for _variant in variants]
             variant_queue = {"instances": {_instance.__dict__.get("variant"): _instance.__dict__ for _instance in
                                            variant_instances}}
             return variant_queue
@@ -197,20 +202,27 @@ def toggle_navbar_collapse(n, is_open):
 
 #InputPage
 ##Input Validation
+
+#frontend_input_input_genomeversion_input
+
+
 @app.callback(
     Output(frontend_input_input_variant_input, "valid"),
     Output(frontend_input_input_variant_input, "invalid"),
     Output("variant_queue_input", "data"),
     [Input(frontend_input_input_variant_input, "n_blur"),
-     Input(frontend_input_input_inheritance_input, "value")],
+     Input(frontend_input_input_inheritance_input, "value"),
+     Input(frontend_input_input_genomeversion_input, "value")],
     [State(frontend_input_input_variant_input, "value")]
 )
-def check_user_input(trigger_1, trigger_2, user_input):
+def check_user_input(trigger_1, trigger_2,genomeversion, user_input):
     # checks if variants entered fit either HGVS or VCF notation,
     # if so: stores them in dcc.Store "variant_queue_input", initiating VEP API requests
     if user_input is not None:
+        #genomeversion=backend.clean_genomeversion(genomeversion)
+
         variants = parse_input(user_input)
-        variant_instances = [AutoCaSc(_variant, mode="web") for _variant in variants]
+        variant_instances = [AutoCaSc(_variant, mode="web",assembly=genomeversion) for _variant in variants]
         if input_ok(variant_instances):
             variant_queue = {"instances": {_instance.__dict__.get("variant"): _instance.__dict__ for _instance in
                                            variant_instances}}
@@ -227,16 +239,21 @@ def check_user_input(trigger_1, trigger_2, user_input):
     Input(frontend_landingpage_landingpage_search_button, "n_clicks"),
     State("variant_queue_input", "data"),
     State("variant_queue_url", "data"),
-    State(frontend_input_input_inheritance_input, "value")
+    State(frontend_input_input_inheritance_input, "value"),
+    State(frontend_input_input_genomeversion_input, "value")
+    
 )
-def search_button_click(n_clicks, variant_queue_input, variant_queue_url, inheritance):
+def search_button_click(n_clicks, variant_queue_input, variant_queue_url, inheritance,genomeversion):
+
     # by clicking the "Search" button on the landing page, the URL is updated, triggering the calculation and display
     # of the results page
     variant_queue = variant_queue_input or variant_queue_url
     if n_clicks is not None and not variant_queue is None and not inheritance is None:
+        #genomeversion=backend.clean_genomeversion(genomeversion)
+
         variants = [variant_queue.get("instances").get(_key).get("variant") for _key in
                     variant_queue.get("instances").keys()]
-        url_suffix = quote(f"/search/inheritance={inheritance}/variants={'%'.join(variants)}")
+        url_suffix = quote(f"/search/genomeversion={genomeversion}/inheritance={inheritance}/variants={'%'.join(variants)}")
         return url_suffix
     else:
         raise PreventUpdate
@@ -362,10 +379,15 @@ def retrieve_variant_data(variant_queue_input, variant_queue_url, variant_memory
     variant_queue = variant_queue_input or variant_queue_url
     if variant_queue:
         if variant_memory is not None:
+            print(variant_memory)
             if variant_queue.get("instances").keys() == variant_memory.get("instances").keys():
-                return store_instances(dict_to_instances(variant_memory))
+                queue_assembly = [variant_queue['instances'][x].get('assembly') for x in variant_queue.get("instances").keys()]
+                memory_assembly = [variant_memory['instances'][x].get('assembly') for x in variant_memory.get("instances").keys()]
+                if queue_assembly ==memory_assembly:
+                    return store_instances(dict_to_instances(variant_memory))
         instances = dict_to_instances(variant_queue)
         for _instance in instances:
+            print(_instance.assembly)
             if not _instance.data_retrieved:
                 _instance.retrieve_data()  # this initiates API calls
         return store_instances(instances)

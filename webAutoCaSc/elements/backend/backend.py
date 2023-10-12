@@ -82,7 +82,9 @@ def dict_to_instances(dict):
     try:
         for _variant in dict.get("instances").keys():
             _instance = dict.get("instances").get(_variant)
-            instance = AutoCaSc(_variant, mode="web")
+            assembly  = _instance.get('assembly')
+
+            instance = AutoCaSc(_variant, mode="web",assembly=assembly)
             if _instance.get("data_retrieved"):
                 for _key in _instance.keys():
                     instance.__dict__[_key] = _instance.get(_key)
@@ -113,3 +115,10 @@ def store_instances(instance_list, code_key="variant"):
     instance_dicts = [instances_to_dict(_instance) for _instance in instance_list]
     return {"instances": {_instance_dict.get(code_key): _instance_dict for _instance_dict in instance_dicts}}
 
+
+def clean_genomeversion(genomeversion):
+    if genomeversion=='HG19':
+        genomeversion='GRCh37'
+    else:
+        genomeversion='GRCh38'
+    return genomeversion

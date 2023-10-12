@@ -85,7 +85,7 @@ def input_ok(instances):
 
 def get_error(error_code):
     error_dict = {
-        201: ("Error: The reference sequence does not match GRCh37!", "warning"),
+        201: ("Error: The reference sequence does not match the selected genome assembly!", "warning"),
         301: ("Error: Could not identify the corresponding compound heterozygous variant!", "danger"),
         400: ("Error: Could not process variant. Please try VCF annotation or HGVS annotation using HGNC gene symbol!",
               "danger"),
