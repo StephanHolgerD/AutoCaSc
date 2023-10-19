@@ -6,7 +6,7 @@ footer = dbc.Navbar(
     dbc.Container(
         [
             html.A(
-                html.Img(src='../../assets/by-nc-sa.eu.svg',
+                html.Img(src='../../../../../../assets/by-nc-sa.eu.svg',
                          height="30px"
                          ),
                 href="https://creativecommons.org/licenses/by-nc-sa/4.0/",
@@ -36,7 +36,7 @@ footer = dbc.Navbar(
                                 width="auto"
                                 )
                     ],
-                    className="ms-auto flex-nowrap mt-3 mt-md-0 g-0",
+                    className="ms-auto",
                     align="center",
                 ),
                 id="frontend_staticpages_header_footer_footer_footer-collapse",

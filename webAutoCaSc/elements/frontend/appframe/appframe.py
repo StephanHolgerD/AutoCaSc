@@ -31,7 +31,7 @@ footer = footertxt.footer
 about_ger = abouttxt.about_ger
 
 server = Flask(__name__)
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],
+app = dash.Dash(external_stylesheets=[dbc.themes.LUMEN],
                 server=server,
                 suppress_callback_exceptions=True)
 app.title = "webAutoCaSc"

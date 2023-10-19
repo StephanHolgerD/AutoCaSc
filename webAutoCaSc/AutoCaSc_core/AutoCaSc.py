@@ -130,7 +130,6 @@ class AutoCaSc:
             # 498 = no matching transcript index has been found (e.g. variant is intergenic)
             self.get_gnomad_constraint()
             self.get_gnomad_counts()  # gets allele counts in gnomad (API)
-            print(self.assembly)
             if self.other_variant is not None and self.other_autocasc_obj is None:
                 other_instance = AutoCaSc(variant=self.other_variant,
                                           inheritance=self.inheritance,

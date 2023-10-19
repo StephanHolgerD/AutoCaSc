@@ -28,7 +28,7 @@ navbar = dbc.Navbar(
                                 dbc.Col(dbc.NavLink("Impressum", href='/impressum', style={"color": "#ffffff"}),
                                         width="auto"),
                             ],
-                            className="ms-auto flex-nowrap mt-3 mt-md-0 g-0",
+                            className="ms-auto",
                             align="center",
                         ),
                         id="navbar-collapse",

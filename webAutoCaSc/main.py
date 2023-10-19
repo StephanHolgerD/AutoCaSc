@@ -11,6 +11,7 @@ from elements.frontend.landingpage import landingpage as landingpagetxt
 from elements.frontend.static_pages.loading import loading
 from elements.frontend.appframe import appframe
 from statistics import mean
+from settings import credentials
 
 import dash
 from dash import html
@@ -379,7 +380,6 @@ def retrieve_variant_data(variant_queue_input, variant_queue_url, variant_memory
     variant_queue = variant_queue_input or variant_queue_url
     if variant_queue:
         if variant_memory is not None:
-            print(variant_memory)
             if variant_queue.get("instances").keys() == variant_memory.get("instances").keys():
                 queue_assembly = [variant_queue['instances'][x].get('assembly') for x in variant_queue.get("instances").keys()]
                 memory_assembly = [variant_memory['instances'][x].get('assembly') for x in variant_memory.get("instances").keys()]
@@ -387,7 +387,6 @@ def retrieve_variant_data(variant_queue_input, variant_queue_url, variant_memory
                     return store_instances(dict_to_instances(variant_memory))
         instances = dict_to_instances(variant_queue)
         for _instance in instances:
-            print(_instance.assembly)
             if not _instance.data_retrieved:
                 _instance.retrieve_data()  # this initiates API calls
         return store_instances(instances)
@@ -504,8 +503,8 @@ def toggle_footer_collapse(n, is_open):
 if __name__ == '__main__':
     app.run_server(debug=True,
                    dev_tools_hot_reload=True,
-                   host='0.0.0.0',
-                   port=5000
+                   host=credentials.host,
+                   port=credentials.port
                    )
 
 
